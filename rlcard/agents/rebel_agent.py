@@ -592,13 +592,29 @@ class Memory(object):
 
     def sample(self):
         ''' Sample a minibatch from the replay memory
-
+    
         Returns:
             state_batch (list): a batch of states
             action_batch (list): a batch of actions
             reward_batch (list): a batch of rewards
             next_state_batch (list): a batch of states
+            legal_actions_batch (list): a batch of legal actions
             done_batch (list): a batch of dones
         '''
         samples = random.sample(self.memory, self.batch_size)
-        return map(np.array, zip(*samples))
+        state_batch = []
+        action_batch = []
+        reward_batch = []
+        next_state_batch = []
+        legal_actions_batch = []
+        done_batch = []
+        
+        for sample in samples:
+            state_batch.append(sample.state)
+            action_batch.append(sample.action)
+            reward_batch.append(sample.reward)
+            next_state_batch.append(sample.next_state)
+            legal_actions_batch.append(sample.legal_actions)
+            done_batch.append(sample.done)
+        
+        return np.array(state_batch), np.array(action_batch), np.array(reward_batch), np.array(next_state_batch), np.array(legal_actions_batch), np.array(done_batch)
